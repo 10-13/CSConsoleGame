@@ -1,3 +1,3 @@
 # CSConsoleGame
 
-Small game developed with C# for Console [Windows]
+Small game developing with C# for Console [Windows]
