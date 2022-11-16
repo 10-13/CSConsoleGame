@@ -14,6 +14,8 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using System.Xml;
 
+using ItemSerializeble = Game.Inventory.Attributes.InventoryItemExtensionAttribute;
+
 namespace CSConsoleGame
 {
 	public static class Program
@@ -47,16 +49,8 @@ namespace CSConsoleGame
 				item.Count = 1000;
 			}
 
-			//var k = JsonConvert.DeserializeXmlNode(JsonConvert.SerializeObject(myInventory));
-			XmlDocument f = new XmlDocument();
-			f.InnerXml = GSerializer.SerializeXML<Inventory>(myInventory, typeof(Game.Inventory.Attributes.InventoryItemExtensionAttribute));
-			f.WriteContentTo
+			Console.WriteLine(GSerializer.SerializeXML(myInventory, typeof(ItemSerializeble)));
 			Console.ReadLine();
 		}
-
-		public static class MXP
-        {
-
-        }
 	}
 }
