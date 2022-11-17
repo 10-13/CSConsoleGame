@@ -49,7 +49,10 @@ namespace CSConsoleGame
 				item.Count = 1000;
 			}
 
-			Console.WriteLine(GSerializer.SerializeXML(myInventory, typeof(ItemSerializeble)));
+			var inf =  Console.ReadKey();
+			
+
+			Console.WriteLine(GSerializer.SerializeJSON(myInventory));
 			Console.ReadLine();
 		}
 	}
