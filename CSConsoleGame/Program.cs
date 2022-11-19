@@ -8,6 +8,8 @@ using Game.Inventory;
 using Game.Inventory.ItemTypes;
 using Game.Serialization;
 using Game.Visualiztion.Menu;
+using Game.Visualiztion.Preview;
+using Game.Visualiztion.Dialog;
 
 
 using System.Dynamic;
@@ -41,7 +43,7 @@ namespace CSConsoleGame
 				item.AmmoPerShoot.Mass = 0;
 				item.AmmoPerShoot.Volume = 0.000002f;
 				item.AmmoPerShoot.Count = 1;
-				item.AmmoPerShoot.ItemName = "7*62 Standart";
+				item.AmmoPerShoot.ItemName = "7*62 S";
 				item.AmmoPerShoot.ItemDescription = "Ammo";
 				item.AmmoPerShoot.AmmoType = "7*62";
 			}
@@ -52,37 +54,13 @@ namespace CSConsoleGame
 				item.Count = 1000;
 			}
 
-			List<string> data = new List<string>();
-			data.Add("ASASD0");
-			data.Add("ASASD1");
-			data.Add("ASASD2");
-			data.Add("ASASD3");
-			data.Add("ASASD4");
-			data.Add("ASASD5");
-			data.Add("ASASD10");
-			data.Add("ASASD11");
-			data.Add("ASASD12");
-			data.Add("ASASD13");
-			data.Add("ASASD14");
-			data.Add("ASASD15");
+			var set = new Menu.MenuSettings();
+			set.DrawFieldHeight = 20;
+			InventoryItemPreview f = new InventoryItemPreview(myInventory.Items[0], set);
+			f.Show();
 
-
-			Menu menu = new Menu(data);
-			menu.ToStream(Console.OpenStandardOutput());
-			ConsoleKey key = Console.ReadKey().Key;
-			while (key != ConsoleKey.Escape)
-			{
-				if (key == ConsoleKey.UpArrow)
-					menu.Position--;
-				if (key == ConsoleKey.DownArrow)
-					menu.Position++;
-				menu.ToStream(Console.OpenStandardOutput());
-				key = Console.ReadKey().Key;
-				Console.Clear();
-			}
-
-			Console.WriteLine(GSerializer.SerializeJSON(myInventory));
-			Console.ReadLine();
+			//Console.WriteLine(GSerializer.SerializeJSON(myInventory));
+			//Console.ReadLine();
 		}
 	}
 }

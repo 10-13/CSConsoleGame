@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Inventory\Attributes\IngameVisebleAttribute.cs" />
     <Compile Include="Inventory\ItemTypes\Ammo.cs" />
     <Compile Include="Inventory\Attributes\InventoryItemExtensionAttribute.cs" />
     <Compile Include="Inventory\InventoryItem.cs" />
@@ -56,7 +57,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serialization\Attributes\GSerializebleAttribute.cs" />
     <Compile Include="Serialization\Serializer.cs" />
-    <Compile Include="Visualiztion\Menu\BasicMenu.cs" />
+    <Compile Include="Visualiztion\Dialog\ConsoleIntDialog.cs" />
+    <Compile Include="Visualiztion\Dialog\ConsoleSelectorDialog.cs" />
+    <Compile Include="Visualiztion\Dialog\ConsoleStringDialog.cs" />
+    <Compile Include="Visualiztion\Menu\InventoryMenu.cs" />
+    <Compile Include="Visualiztion\Menu\Menu.cs" />
+    <Compile Include="Visualiztion\Preview\InventoryItemPreview.cs" />
+    <Compile Include="Visualiztion\Preview\NameValuePreview.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

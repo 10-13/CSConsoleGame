@@ -12,9 +12,11 @@ namespace Game.Inventory.ItemTypes
 	public class Weapon : InventoryItem
 	{
 		[JsonProperty("damage")]
+		[Attributes.IngameViseble]
 		public int Damage { get; set; } = 0;
 
 		[JsonProperty("ammo")]
+		[Attributes.IngameViseble]
 		public Ammo AmmoPerShoot { get; set; } = null;
 
 		public Weapon() { }
@@ -23,5 +25,5 @@ namespace Game.Inventory.ItemTypes
 		{
 			return MemberwiseClone();
 		}
-	}
+    }
 }

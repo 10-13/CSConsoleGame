@@ -12,6 +12,7 @@ namespace Game.Inventory.ItemTypes
 	public class Ammo : InventoryItem
 	{
 		[JsonProperty("ammotype")]
+		[Attributes.IngameViseble]
 		public string AmmoType { get; set; } = null;
 
 		public Ammo() { }
@@ -20,5 +21,10 @@ namespace Game.Inventory.ItemTypes
 		{
 			return MemberwiseClone();
 		}
-	}
+
+        public override string ToString()
+        {
+			return AmmoType + " " + ItemName;
+        }
+    }
 }

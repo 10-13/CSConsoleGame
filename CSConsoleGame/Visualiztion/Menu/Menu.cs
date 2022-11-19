@@ -34,11 +34,42 @@ namespace Game.Visualiztion.Menu
         [Serializable]
         public class MenuSettings
         {
+            [JsonIgnore]
+            private int insertPos = 2;
+
             [JsonProperty("width")]
             public int DrawFieldWidth { get; set; } = 20;
 
             [JsonProperty("height")]
             public int DrawFieldHeight { get; set; } = 10;
+
+            [JsonProperty("dewider")]
+            public char DewiderSymbol { get; set; } = '-';
+
+            [JsonProperty("selection")]
+            public char SelectionSymbol { get; set; } = '>';
+
+            [JsonProperty("rowspace")]
+            public int RowSpace { get; set; } = 5;
+
+            [JsonProperty("dewiderspace")]
+            public int DewiderSpace { get; set; } = 2;
+
+            [JsonProperty("selectposition")]
+            public int SelectInnsertPosition
+            {
+                get
+                {
+                    return insertPos;
+                }
+                set
+                {
+                    insertPos = value > -1 ? Math.Min(RowSpace - 1, value) : 0;
+                }
+            }
+
+            [JsonProperty("doubledewidercut")]
+            public bool DoubleDewiderCut { get; set; } = true;
 
             public MenuSettings() { }
         }
@@ -57,16 +88,36 @@ namespace Game.Visualiztion.Menu
             return Res;
         }
         
+        private string GenerateSpace(int size,char symbol)
+        {
+            string res = "";
+            for(int i = 0;i < size; i++)
+                res += symbol;
+            return res;
+        }
+
         public string[] GetAsLines()
         {
+            Position = Position;
             string[] res = new string[Settings.DrawFieldHeight];
             int spos = Position - Settings.DrawFieldHeight / 4;
             for(int i = 0;i < Settings.DrawFieldHeight; i++)
             {
                 if (i % 2 == 1 && i / 2 + spos < Items.Count && i / 2 + spos > -1)
                 {
-                    res[i] = "  " + (Position == spos + i / 2 ? ">" : " ") + " " + Items[spos + i / 2];
-                    res[i] = res[i].Substring(0, Math.Min(Settings.DrawFieldWidth,res[i].Length));
+                    
+                    res[i] = GenerateSpace(Settings.RowSpace,' ') + Items[spos + i / 2];
+                    if (Position == spos + i / 2)
+                        res[i] = res[i].Insert(Settings.SelectInnsertPosition, Settings.SelectionSymbol.ToString());
+                    if (res[i].Length > Settings.DrawFieldWidth)
+                    {
+                        res[i] = res[i].Substring(0, Settings.DrawFieldWidth - 3);
+                        res[i] += "...";
+                    }
+                }
+                else if(spos + i / 2 > -1 && spos + (i - 1) / 2 < Items.Count)
+                {
+                    res[i] = GenerateSpace(Settings.DewiderSpace, ' ') + GenerateSpace(Settings.DrawFieldWidth - Settings.DewiderSpace * (Settings.DoubleDewiderCut ? 2 : 1), Settings.DewiderSymbol) + (Settings.DoubleDewiderCut ? GenerateSpace(Settings.DewiderSpace, ' ') : "");
                 }
             }
             return res;
