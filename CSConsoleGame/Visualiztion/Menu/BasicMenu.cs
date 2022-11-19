@@ -1,78 +1,84 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Newtonsoft.Json;
+
 namespace Game.Visualiztion.Menu
 {
-    public interface IInputBinder 
+    public class Menu
     {
-        event Action<ConsoleKey> OnInput;
-    }
-    
-    public abstract class BasicMenu
-    {
-        public readonly ConsoleKey UpKey;
-        public readonly ConsoleKey DownKey;
-        public readonly ConsoleKey SelectKey;
+        private List<string> Items = new List<string>();
 
-
-        protected void OnInput(ConsoleKey key)
+        private MenuSettings Settings = new MenuSettings();
+        private int _pos = 0;
+        public int Position
         {
-            if (key == UpKey)
-                Up();
-            if (key == DownKey)
-                Down();
-            if (key == SelectKey)
-                Select();
+            get
+            {
+                return _pos;
+            }
+            set
+            {
+                _pos = value;
+                if (value >= Items.Count)
+                    _pos = Items.Count - 1;
+                if (value < 0)
+                    _pos = 0;
+            }
         }
 
-        public BasicMenu(IInputBinder binder)
+        [Serializable]
+        public class MenuSettings
         {
-            binder.OnInput += OnInput;
-            UpKey = ConsoleKey.UpArrow;
-            DownKey = ConsoleKey.DownArrow;
-            SelectKey = ConsoleKey.Enter;
+            [JsonProperty("width")]
+            public int DrawFieldWidth { get; set; } = 20;
+
+            [JsonProperty("height")]
+            public int DrawFieldHeight { get; set; } = 10;
+
+            public MenuSettings() { }
         }
 
-        public BasicMenu(IInputBinder binder, ConsoleKey[] bindings)
+        public Menu(in List<string> Items,MenuSettings settings = null)
         {
-            binder.OnInput += OnInput;
-            UpKey = bindings[0];
-            DownKey = bindings[1];
-            SelectKey = bindings[2];
+            Settings = settings == null ? new MenuSettings() : settings;
+            this.Items = Items;
         }
 
-        public abstract void Up();
-        public abstract void Down();
-        public abstract void Select();
-    }
-
-    public class Menu<T> : BasicMenu
-    {
-        protected List<T> objectList = new List<T>();
-        protected int SelectedObject = 0;
-
-        public Menu(in List<T> objectList,IInputBinder binder) : base(binder)
+        public override string ToString()
         {
-            this.objectList = objectList;
-
+            string Res = "\n";
+            foreach (string str in Items)
+                Res += "\t" + str + "\n\n";
+            return Res;
+        }
+        
+        public string[] GetAsLines()
+        {
+            string[] res = new string[Settings.DrawFieldHeight];
+            int spos = Position - Settings.DrawFieldHeight / 4;
+            for(int i = 0;i < Settings.DrawFieldHeight; i++)
+            {
+                if (i % 2 == 1 && i / 2 + spos < Items.Count && i / 2 + spos > -1)
+                {
+                    res[i] = "  " + (Position == spos + i / 2 ? ">" : " ") + " " + Items[spos + i / 2];
+                    res[i] = res[i].Substring(0, Math.Min(Settings.DrawFieldWidth,res[i].Length));
+                }
+            }
+            return res;
         }
 
-        public override void Down()
+        public void ToStream(Stream stream)
         {
-            throw new NotImplementedException();
-        }
-
-        public override void Select()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Up()
-        {
-            throw new NotImplementedException();
+            using(StreamWriter writer = new StreamWriter(stream))
+            foreach(string str in GetAsLines())
+            {
+                    writer.WriteLine(str);
+            }
         }
     }
 
